@@ -6,8 +6,8 @@ android client
 # 2) ble_freertos_amdtpc – Client ble modified from AmbiqMicro SDK example
 # 3) ble_freertos_amdtps – Server ble modified from AmbiqMicro SDK example
 
-Power Edge2 with server code..blue led should light
-Start Android KERobotNrf (KERobotNrf Edge2 Uart icon)
+Power Edge2 with server code, blue led should light  
+Start Android KERobotNrf (KERobotNrf Edge2 Uart icon)  
 - click connect button.  New dialog appears should show amdtp in scan results.  If not keep hitting scan until you see amdtp when scan becomes available.  Sometimes it takes several attempts.   Try re-setting server board if not seen.  
 - click on text box at bottom.  Type 1 send and yellow led lights, type 2 send and red led lights.  Disconnect and led’s go back to blue.  Whatever you type will echo back to your screen as rx and that response is coming from the server board!  Simple two way communication over ble to artemis!
 
