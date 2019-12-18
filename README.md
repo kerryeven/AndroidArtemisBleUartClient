@@ -8,8 +8,9 @@ android client
 
 Power Edge2 with server code, blue led should light  
 Start Android KERobotNrf (KERobotNrf Edge2 Uart icon)  
-- click connect button.  New dialog appears should show amdtp in scan results.  If not keep hitting scan until you see amdtp when scan becomes available.  Sometimes it takes several attempts.   Try re-setting server board if not seen.  
-- click on text box at bottom.  Type 1 send and yellow led lights, type 2 send and red led lights.  Disconnect and led’s go back to blue.  Whatever you type will echo back to your screen as rx and that response is coming from the server board!  Simple two way communication over ble to artemis!
+- click connect button at top.  New dialog appears should show amdtp in scan results.  If not keep hitting scan until you see amdtp when scan becomes available.  Sometimes it takes several attempts.   Try re-setting server board if not seen.  Tap Amdtp when it shows.
+- When it says "Device: Amdtp - ready" at the bottom and Connected to: Amdtp in list you are ready to send/receive.  If not, hit connect at top again and repeat until connected. 
+- click on text box at bottom left of Send button.  Type 1 send and yellow led lights, type 2 send and red led lights.  Disconnect and led’s go back to blue.  Whatever you type will echo back to your screen as rx and that response is coming from the server board!  Simple two way communication over ble to artemis!
 
 
 Embedded Debug Journey:  Getting Edge2 server to turn on/off lights with messages sent and returned over ble from Android.  Start server = blue light.  Send 1 = yellow. Send 2 = red.  Disconnect = blue.  
