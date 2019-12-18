@@ -1,10 +1,10 @@
 # AndroidArtemisBleUartClient
 android client
-#Contains:
+# Contains:
 
-#1) Android Studio Project KERobotNrf
-#2) ble_freertos_amdtpc – Client ble modified from AmbiqMicro SDK example
-#3) ble_freertos_amdtps – Server ble modified from AmbiqMicro SDK example
+# 1) Android Studio Project KERobotNrf
+# 2) ble_freertos_amdtpc – Client ble modified from AmbiqMicro SDK example
+# 3) ble_freertos_amdtps – Server ble modified from AmbiqMicro SDK example
 
 Power Edge2 with server code..blue led should light
 Start Android KERobotNrf (KERobotNrf Edge2 Uart icon)
