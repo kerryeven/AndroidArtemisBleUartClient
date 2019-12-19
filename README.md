@@ -6,6 +6,8 @@ android client
 # 2) ble_freertos_amdtpc – Client ble modified from AmbiqMicro SDK example
 # 3) ble_freertos_amdtps – Server ble modified from AmbiqMicro SDK example
 
+# Android App requires Location to be manually enabled OR YOU WILL NOT SEE any devices when you scan.  Enable Location permission under settings / apps & notifications ... Permissions/Location
+
 Power Edge2 with server code, blue led should light  
 Start Android KERobotNrf (KERobotNrf Edge2 Uart icon)  
 - click connect button at top.  New dialog appears should show amdtp in scan results.  If not keep hitting scan until you see amdtp when scan becomes available.  Sometimes it takes several attempts.   Try re-setting server board if not seen.  Tap Amdtp when it shows.
