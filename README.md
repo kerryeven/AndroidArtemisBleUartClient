@@ -79,7 +79,7 @@ void OnProjectLoad (void) {
   File.Open ("$(ProjectDir)/Documents/AmbiqSuite-Rel2.2.0/boards_sfe/edge2/examples/ble_freertos_amdtps/gcc/bin/ble_freertos_amdtps_asb.axf");  
 }  
 
-- Setup with J-Link in one usb and power to board through another power supply and you can run a terminal program like Termite at the same time that you debug in Ozone.  That allows you to control the client from the terminal and see/debug the messages etc., from Ozone.  
+Setup with J-Link in one usb and power to board through another power supply and you can run a terminal program like Termite at the same time that you debug in Ozone.  That allows you to control the client from the terminal and see/debug the messages etc., from Ozone.  
 
 AMDTPC example: (Used Sparkfun Redboard Nano board)
 
@@ -88,22 +88,22 @@ radio_task.c comment out if ( wsfOsReadyToSleep() ) statement to stop sleeping a
 getting printf statements out to the pc screen was accomplished by adding am_menu_printf (“text you want”) anywhere after the ble_menu definition at the end of ble_freertos_amdtpc.c file.  
 
 DEBUG NOTE: - How to print array item, return, and line feed
-data[1] = counter;
-    status = AmdtpcSendPacket(AMDTP_PKT_TYPE_DATA, false, true, data, sizeof(data));
-    am_menu_printf("SendPacketReturn = %d",status); //KHE 
-    am_menu_printf(", Data Sent = %d\n",data[1]);
-    am_menu_printf("amdtp_main - just sent data\n");  //KHE  actually only sends once
+data[1] = counter;  
+    status = AmdtpcSendPacket(AMDTP_PKT_TYPE_DATA, false, true, data, sizeof(data));  
+    am_menu_printf("SendPacketReturn = %d",status); //KHE  
+    am_menu_printf(", Data Sent = %d\n",data[1]);  
+    am_menu_printf("amdtp_main - just sent data\n");  //KHE  actually only sends once  
 
-Can’t am_menu_printf in amdtpc_main.c.  Had to add:
-	extern uint32_t am_menu_printf(const char *pcFmt, ...);
-	after the include section at the top of the fle.   
+Can’t am_menu_printf in amdtpc_main.c.  Had to add:  
+	extern uint32_t am_menu_printf(const char *pcFmt, ...);  
+	after the include section at the top of the fle.  
 
-amdtpServiceUUID 		00002760-08c2-11e1-9073-0e8ac72e1011
-amdtpRxChUuid: 		00002760-08c2-11e1-9073-0e8ac72e0011
-amdtpTxChUuid:		00002760-08c2-11e1-9073-0e8ac72e0012
-attCliChCfgUuid: amdtpTxCcc 	181c2800-2801-2802-2803-290029012902
-amdtpAckChUuid: 		00002760-08c2-11e1-9073-0e8ac72e0013
-attCliChCfgUuid: amdtpAckCcc	181c2800-2801-2802-2803-290029012902
+amdtpServiceUUID 	00002760-08c2-11e1-9073-0e8ac72e1011  
+amdtpRxChUuid: 		00002760-08c2-11e1-9073-0e8ac72e0011  
+amdtpTxChUuid:		00002760-08c2-11e1-9073-0e8ac72e0012  
+attCliChCfgUuid: amdtpTxCcc 	181c2800-2801-2802-2803-290029012902  
+amdtpAckChUuid: 		00002760-08c2-11e1-9073-0e8ac72e0013  
+attCliChCfgUuid: amdtpAckCcc	181c2800-2801-2802-2803-290029012902  
 
 
 radio_task.c comment out if ( wsfOsReadyToSleep() ) statement to stop sleeping and waking and the associated messages.
@@ -111,20 +111,20 @@ radio_task.c comment out if ( wsfOsReadyToSleep() ) statement to stop sleeping a
 
  Turn the blue light on at power up...
 
-	Add to ble_freertos_amdtps.c near end after #ifdef AM_DEBUG_PRINTF
+	Add to ble_freertos_amdtps.c near end after #ifdef AM_DEBUG_PRINTF  
 
-am_hal_gpio_pinconfig(18, g_AM_HAL_GPIO_OUTPUT);
-    	am_hal_gpio_output_set(18);
+am_hal_gpio_pinconfig(18, g_AM_HAL_GPIO_OUTPUT);  
+    	am_hal_gpio_output_set(18);  
 
  amdtpc client example (second level) - Turn on yellow light when client sends 3, (red 4)  from serial 
   
 Add pinconfig’s for other lights to ble_freertos_amdtps.c:
-    am_hal_gpio_pinconfig(17, g_AM_HAL_GPIO_OUTPUT); //KHE Green
-    am_hal_gpio_pinconfig(18, g_AM_HAL_GPIO_OUTPUT); //KHE Blue
-    am_hal_gpio_pinconfig(19, g_AM_HAL_GPIO_OUTPUT); //KHE Red
-    am_hal_gpio_pinconfig(37, g_AM_HAL_GPIO_OUTPUT); //KHE Yellow 
+    am_hal_gpio_pinconfig(17, g_AM_HAL_GPIO_OUTPUT); //KHE Green  
+    am_hal_gpio_pinconfig(18, g_AM_HAL_GPIO_OUTPUT); //KHE Blue  
+    am_hal_gpio_pinconfig(19, g_AM_HAL_GPIO_OUTPUT); //KHE Red  
+    am_hal_gpio_pinconfig(37, g_AM_HAL_GPIO_OUTPUT); //KHE Yellow   
 
-Add to amdtp_main.c: amdtpDtpRecvCback function if buf[0] == 1
+Add to amdtp_main.c: amdtpDtpRecvCback function if buf[0] == 1  
  	  if (buf[0] == 1)  
     {  
         APP_TRACE_INFO0("send test data\n");  
@@ -143,8 +143,8 @@ Turns out if not in amdtpDtpRecvCback, can’t turn lights on from amdtpc nano c
  
  Nrf connect to turn lights on....
 
-- Amdtps_main.c amtps_write_cback 
-- Add the following begore return AMDTP_SUCCESS
+Amdtps_main.c amtps_write_cback 
+Add the following begore return AMDTP_SUCCESS
 
     if (pValue[0] == 1)  
     {  
@@ -162,7 +162,7 @@ Turns out if not in amdtpDtpRecvCback, can’t turn lights on from amdtpc nano c
  Change pValue above in amtps_write_cback to 49 and 50, the decunal value of the utf-8 numbers entered in the android app.  The app converts it to binary for transmission.  Android 
 
 
-Working....not showing up in scan routinely...have to hit many times sometimes.
+Todo....not showing up in scan routinely...have to hit many times sometimes.
 
 
 
