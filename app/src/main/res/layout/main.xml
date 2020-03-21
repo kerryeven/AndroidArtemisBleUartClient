@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -10,66 +12,228 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btn_select"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="Connect" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="552dp"
         android:layout_weight="0.31"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/RelativeLayout1"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="292dp"
-            android:layout_weight="4.11"
-            android:orientation="vertical" >
+            android:layout_height="556dp"
+            android:layout_weight="4.11">
 
-            <EditText
-                android:id="@+id/sendText"
-                android:layout_width="102dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/sendButton"
-                android:ems="10"
-                android:enabled="false"
-                android:fontFamily="1"
-                android:lines="1"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:shadowRadius="1" />
-
-            <ListView
-                android:id="@+id/listMessage"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/sendButton"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" >
-            </ListView>
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:enabled="false"
-                android:text="Send" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/RelativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4.11"
+                    android:orientation="vertical">
 
-        </RelativeLayout>
+                    <Button
+                        android:id="@+id/btn_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:padding="12dp"
+                        android:text="Connect"
+                        app:layout_constraintBottom_toTopOf="@+id/b_Scrubber"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/sendText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:fontFamily="1"
+                        android:lines="1"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:shadowRadius="1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/sendButton"
+                        app:layout_constraintTop_toBottomOf="@+id/listMessage" />
+
+                    <Button
+                        android:id="@+id/b_Stop"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="100dp"
+                        android:text="Stop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Slower" />
+
+                    <ListView
+                        android:id="@+id/listMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintBottom_toTopOf="@+id/sendButton"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Rvrse">
+
+                    </ListView>
+
+                    <Button
+                        android:id="@+id/sendButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="0dp"
+                        android:enabled="false"
+                        android:text="Send"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                    <Button
+                        android:id="@+id/b_Fwrd"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:onClick="onClickFwrd"
+                        android:text="Forward"
+                        app:layout_constraintBottom_toTopOf="@+id/b_Stop"
+                        app:layout_constraintEnd_toEndOf="@+id/b_Stop" />
+
+                    <Button
+                        android:id="@+id/b_Left"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginEnd="15dp"
+                        android:text="Left"
+                        app:layout_constraintBottom_toBottomOf="@+id/b_Stop"
+                        app:layout_constraintEnd_toStartOf="@+id/b_Stop" />
+
+                    <Button
+                        android:id="@+id/b_Right"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:text="Right"
+                        app:layout_constraintBottom_toBottomOf="@+id/b_Stop"
+                        app:layout_constraintStart_toEndOf="@+id/b_Stop" />
+
+                    <Button
+                        android:id="@+id/b_Rvrse"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="Reverse"
+                        app:layout_constraintEnd_toEndOf="@+id/b_Stop"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Stop" />
+
+                    <Button
+                        android:id="@+id/b_Squeegee"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:lines="2"
+                        android:text="Squeegee Down"
+                        app:layout_constraintBottom_toBottomOf="@+id/b_Scrubber"
+                        app:layout_constraintEnd_toStartOf="@+id/b_Scrubber" />
+
+                    <Button
+                        android:id="@+id/b_Righter"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:lines="2"
+                        android:text="Right Trend"
+                        app:layout_constraintBottom_toBottomOf="@+id/b_Faster"
+                        app:layout_constraintEnd_toEndOf="@+id/b_Spray" />
+
+                    <Button
+                        android:id="@+id/b_Lefter"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:lines="2"
+                        android:text="Left Trend"
+                        app:layout_constraintStart_toStartOf="@+id/b_Squeegee"
+                        app:layout_constraintTop_toTopOf="@+id/b_Faster" />
+
+                    <Button
+                        android:id="@+id/b_Slower"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lines="2"
+                        android:text="Slower"
+                        app:layout_constraintStart_toStartOf="@+id/b_Faster"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Faster" />
+
+                    <Button
+                        android:id="@+id/b_Faster"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lines="2"
+                        android:text="Faster"
+                        app:layout_constraintStart_toStartOf="@+id/b_Fwrd"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Scrubber" />
+
+                    <Button
+                        android:id="@+id/b_Scrubber"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lines="2"
+                        android:text="Scrubber On"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_select" />
+
+                    <Button
+                        android:id="@+id/b_Spray"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:lines="2"
+                        android:text="Spray On"
+                        app:layout_constraintBottom_toBottomOf="@+id/b_Scrubber"
+                        app:layout_constraintStart_toEndOf="@+id/b_Scrubber" />
+
+                    <Button
+                        android:id="@+id/b_StepClean"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="55dp"
+                        android:lines="2"
+                        android:text="Step Clean"
+                        app:layout_constraintStart_toStartOf="@+id/b_Righter"
+                        app:layout_constraintTop_toBottomOf="@+id/b_Righter" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Rev 1.2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/btn_select" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
+        android:id="@+id/RelativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"

@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,6 +34,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
@@ -54,6 +57,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private ArrayAdapter<String> listAdapter;
     private Button btnConnectDisconnect,btnSend;
     private EditText edtMessage;
+
+    private Button b_Squeegee;
+    private Button b_Scrubber;
+    private Button b_Spray;
+    private Button b_Fwrd;
+    private Button b_Right;
+    private Button b_Stop;
+    private Button b_Rvrse;
+    private Button b_Left;
+    private Button b_Lefter;
+    private Button b_Righter;
+    private Button b_Faster;
+    private Button b_Slower;
+    private Button b_StepClean;
+    private String s_Button = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +90,37 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         btnConnectDisconnect=(Button) findViewById(R.id.btn_select);
         btnSend=(Button) findViewById(R.id.sendButton);
         edtMessage = (EditText) findViewById(R.id.sendText);
+
+        b_Squeegee = findViewById((R.id.b_Squeegee));
+        b_Scrubber = findViewById((R.id.b_Scrubber));
+        b_Spray = findViewById(R.id.b_Spray);
+        b_Fwrd = findViewById(R.id.b_Fwrd);
+        b_Right = findViewById(R.id.b_Right);
+        b_Stop = findViewById(R.id.b_Stop);
+        b_Rvrse = findViewById(R.id.b_Rvrse);
+        b_Left = findViewById(R.id.b_Left);
+        b_Lefter = findViewById(R.id.b_Lefter);
+        b_Righter = findViewById(R.id.b_Righter);
+        b_Faster = findViewById(R.id.b_Faster);
+        b_Slower = findViewById(R.id.b_Slower);
+        b_StepClean = findViewById(R.id.b_StepClean);
+        setButtonColors();
+        b_Squeegee.setVisibility(View.INVISIBLE);
+        b_Scrubber.setVisibility(View.INVISIBLE);
+        b_Spray.setVisibility(View.INVISIBLE);
+        b_Fwrd.setVisibility(View.INVISIBLE);
+        b_Right.setVisibility(View.INVISIBLE);
+        b_Stop.setVisibility(View.INVISIBLE);
+        b_Rvrse.setVisibility(View.INVISIBLE);
+        b_Left.setVisibility(View.INVISIBLE);
+        b_Lefter.setVisibility(View.INVISIBLE);
+        b_Righter.setVisibility(View.INVISIBLE);
+        b_Faster.setVisibility(View.INVISIBLE);
+        b_Slower.setVisibility(View.INVISIBLE);
+        b_StepClean.setVisibility(View.INVISIBLE);
+
+
+
         service_init();
 
 
@@ -97,6 +147,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         {
                             mService.disconnect();
 
+                                b_Squeegee.setVisibility(View.INVISIBLE);
+                                b_Scrubber.setVisibility(View.INVISIBLE);
+                                b_Spray.setVisibility(View.INVISIBLE);
+                                b_Fwrd.setVisibility(View.INVISIBLE);
+                                b_Right.setVisibility(View.INVISIBLE);
+                                b_Stop.setVisibility(View.INVISIBLE);
+                                b_Rvrse.setVisibility(View.INVISIBLE);
+                                b_Left.setVisibility(View.INVISIBLE);
+                                b_Lefter.setVisibility(View.INVISIBLE);
+                                b_Righter.setVisibility(View.INVISIBLE);
+                                b_Faster.setVisibility(View.INVISIBLE);
+                                b_Slower.setVisibility(View.INVISIBLE);
+                                b_StepClean.setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -127,6 +190,400 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         });
 
         // Set initial UI state
+        b_Stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "0";
+                byte[] value;
+                try {
+                    setButtonColors();
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    b_Lefter.setVisibility(View.INVISIBLE);
+                    b_Righter.setVisibility(View.INVISIBLE);
+                    b_Faster.setVisibility(View.INVISIBLE);
+                    b_Slower.setVisibility(View.INVISIBLE);
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    //ViewCompat.setBackgroundTintList(b_Stop, ContextCompat.getColorStateList(getApplicationContext()
+                    //        , android.R.color.holo_red_light));
+                    ViewCompat.setBackgroundTintList(b_Stop, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorStop));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        b_Fwrd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "3";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    b_Lefter.setVisibility(View.VISIBLE);
+                    b_Righter.setVisibility(View.VISIBLE);
+                    b_Faster.setVisibility(View.VISIBLE);
+                    b_Slower.setVisibility(View.VISIBLE);
+                    b_StepClean.setVisibility(View.VISIBLE);
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Fwrd, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        b_Right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "2";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Right, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Rvrse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "1";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    b_Lefter.setVisibility(View.VISIBLE);
+                    b_Righter.setVisibility(View.VISIBLE);
+                    b_Faster.setVisibility(View.VISIBLE);
+                    b_Slower.setVisibility(View.VISIBLE);
+                    b_StepClean.setVisibility(View.VISIBLE);
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Rvrse, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "4";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Left, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Lefter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "9";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Lefter, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Righter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "10";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Righter, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Faster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "11";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Faster, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Slower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "12";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_Slower, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        b_StepClean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "15";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_StepClean, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Scrubber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "";
+                String s_OnOff = (String) b_Scrubber.getText();
+                if(s_OnOff .equals("Scrubber On")) {
+                    b_Scrubber.setText("Scrubber Off");
+                    message = "5"; //Motor on
+                } else {
+                    b_Scrubber.setText("Scrubber On");
+                    message = "6"; //Motor off
+                }
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    if(message .equals("5")) {
+                        ViewCompat.setBackgroundTintList(b_Scrubber, ContextCompat.getColorStateList(getApplicationContext()
+                                , R.color.colorGo));
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Squeegee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "";
+                String s_OnOff = (String) b_Squeegee.getText();
+                if(s_OnOff .equals("Squeegee Down")) {
+                    b_Squeegee.setText("Squeegee Up");
+                    message = "7"; //put squeegee down
+                } else {
+                    b_Squeegee.setText("Squeegee Down");
+                    message = "8"; //put squeegee up
+                }
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    if(message .equals("7")) {
+                        ViewCompat.setBackgroundTintList(b_Squeegee, ContextCompat.getColorStateList(getApplicationContext()
+                                , R.color.colorGo));
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_Spray.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "";
+                String s_OnOff = (String) b_Spray.getText();
+                if(s_OnOff .equals("Spray On")) {
+                    b_Spray.setText("Spray Off");
+                    message = "13"; //Turn pump on
+                } else {
+                    b_Spray.setText("Spray On");
+                    message = "14"; //Turn Pump off
+                }
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    if(message .equals("7")) {
+                        ViewCompat.setBackgroundTintList(b_Spray, ContextCompat.getColorStateList(getApplicationContext()
+                                , R.color.colorGo));
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    private void setButtonColors(){
+
+        ViewCompat.setBackgroundTintList(btnConnectDisconnect, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorPrimary));
+        ViewCompat.setBackgroundTintList(b_Squeegee, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAction));
+        ViewCompat.setBackgroundTintList(b_Scrubber, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAction));
+        ViewCompat.setBackgroundTintList(b_Spray, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAction));
+        ViewCompat.setBackgroundTintList(b_Fwrd, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_Right, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_Rvrse, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_Stop, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_Left, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_Lefter, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorTrend));
+        ViewCompat.setBackgroundTintList(b_Righter, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorTrend));
+        ViewCompat.setBackgroundTintList(b_Faster, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorTrend));
+        ViewCompat.setBackgroundTintList(b_Slower, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorTrend));
+        ViewCompat.setBackgroundTintList(b_StepClean, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorTrend));
 
     }
 
@@ -163,7 +620,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             String action = intent.getAction();
 
             final Intent mIntent = intent;
-            //*********************//
+            //***********************//
             if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -176,6 +633,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         listAdapter.add("["+currentDateTimeString+"] Connected to: "+ mDevice.getName());
                         messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
                         mState = UART_PROFILE_CONNECTED;
+                        b_Squeegee.setVisibility(View.VISIBLE);
+                        b_Scrubber.setVisibility(View.VISIBLE);
+                        b_Spray.setVisibility(View.VISIBLE);
+                        b_Fwrd.setVisibility(View.VISIBLE);
+                        b_Right.setVisibility(View.VISIBLE);
+                        b_Stop.setVisibility(View.VISIBLE);
+                        b_Rvrse.setVisibility(View.VISIBLE);
+                        b_Left.setVisibility(View.VISIBLE);
+                        b_StepClean.setVisibility(View.VISIBLE);
+                        b_Lefter.setVisibility(View.INVISIBLE);
+                        b_Righter.setVisibility(View.INVISIBLE);
+                        b_Faster.setVisibility(View.INVISIBLE);
+                        b_Slower.setVisibility(View.INVISIBLE);
                     }
                 });
             }
@@ -317,8 +787,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
                     ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - connecting");
                     mService.connect(deviceAddress);
-
-
                 }
                 break;
             case REQUEST_ENABLE_BT:
@@ -375,4 +843,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     .show();
         }
     }
+
+
+
+
 }

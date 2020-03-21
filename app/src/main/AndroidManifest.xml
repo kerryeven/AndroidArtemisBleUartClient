@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--*******************************************************************************
+    Works with Arduino amdtpsNano.ino.
+
+    Revision 1.2
+        1.2 - Added speed control and turn while moving buttons.  Changed bunch of colors and positions.
+
+        1.1 - Reversed Direction buttons and servo up/down commands issued due to putting servo on front o
+        of robot instead of back.
+    TODO:
+    -  Implement distance sensor - on board for now
+    -  Implement and mount brush motor - DECIDE ON SIDE OR FRONT!
+
+
+*********************************************************************************-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="e.kerry.kerobotnrf">
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -12,8 +26,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="unspecified">
+
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,8 +39,11 @@
         <activity
             android:name=".DeviceListActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
+            android:theme="@android:style/Theme.Dialog"
+            android:configChanges="orientation"
+            android:screenOrientation="unspecified">
+
+    </activity>
         <service
             android:enabled="true"
             android:name=".UartService" />
