@@ -1,6 +1,7 @@
 package e.kerry.kerobotnrf;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -19,7 +20,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,6 +37,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import static e.kerry.kerobotnrf.UartService.ACK_Value;
 
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
     private static final int REQUEST_SELECT_DEVICE = 1;
@@ -71,7 +72,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private Button b_Faster;
     private Button b_Slower;
     private Button b_StepClean;
-    private String s_Button = "";
+    private Button b_Ack;
+    private Button b_BigLeft;
+    private Button b_BigRight;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         b_Faster = findViewById(R.id.b_Faster);
         b_Slower = findViewById(R.id.b_Slower);
         b_StepClean = findViewById(R.id.b_StepClean);
+        b_Ack = findViewById(R.id.b_Ack);
+        b_BigLeft = findViewById(R.id.b_BigLeft);
+        b_BigRight = findViewById(R.id.b_BigRight);
         setButtonColors();
         b_Squeegee.setVisibility(View.INVISIBLE);
         b_Scrubber.setVisibility(View.INVISIBLE);
@@ -113,6 +119,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         b_Stop.setVisibility(View.INVISIBLE);
         b_Rvrse.setVisibility(View.INVISIBLE);
         b_Left.setVisibility(View.INVISIBLE);
+        b_BigLeft.setVisibility(View.INVISIBLE);
+        b_BigRight.setVisibility(View.INVISIBLE);
+        b_Ack.setVisibility(View.INVISIBLE);
+        b_BigLeft.setVisibility(View.INVISIBLE);
+        b_BigRight.setVisibility(View.INVISIBLE);
         b_Lefter.setVisibility(View.INVISIBLE);
         b_Righter.setVisibility(View.INVISIBLE);
         b_Faster.setVisibility(View.INVISIBLE);
@@ -120,7 +131,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         b_StepClean.setVisibility(View.INVISIBLE);
 
 
-
+        // Initialize the UartService Class
         service_init();
 
 
@@ -129,37 +140,40 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mBtAdapter.isEnabled()) {
+                if (!mBtAdapter.isEnabled()) { //Request BlueTooth enable from user cuz not enabled
                     Log.i(TAG, "onClick - BT not enabled yet");
                     Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
                 }
-                else {
-                    if (btnConnectDisconnect.getText().equals("Connect")){
+                else { //BlueTooth enabled so Start the DeviceListActivity Class to choose device
+                    if (btnConnectDisconnect.getText().equals("Connect")){ //Button label is Connect
 
                         //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
 
                         Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                         startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
-                    } else {
+                    } else { //Button label is Disconnect
                         //Disconnect button pressed
                         if (mDevice!=null)
                         {
-                            mService.disconnect();
-
-                                b_Squeegee.setVisibility(View.INVISIBLE);
-                                b_Scrubber.setVisibility(View.INVISIBLE);
-                                b_Spray.setVisibility(View.INVISIBLE);
-                                b_Fwrd.setVisibility(View.INVISIBLE);
-                                b_Right.setVisibility(View.INVISIBLE);
-                                b_Stop.setVisibility(View.INVISIBLE);
-                                b_Rvrse.setVisibility(View.INVISIBLE);
-                                b_Left.setVisibility(View.INVISIBLE);
-                                b_Lefter.setVisibility(View.INVISIBLE);
-                                b_Righter.setVisibility(View.INVISIBLE);
-                                b_Faster.setVisibility(View.INVISIBLE);
-                                b_Slower.setVisibility(View.INVISIBLE);
-                                b_StepClean.setVisibility(View.INVISIBLE);
+                            mService.disconnect(); //UartService disconnect function
+                            //Turn off command buttons
+                            b_Squeegee.setVisibility(View.INVISIBLE);
+                            b_Scrubber.setVisibility(View.INVISIBLE);
+                            b_Spray.setVisibility(View.INVISIBLE);
+                            b_Fwrd.setVisibility(View.INVISIBLE);
+                            b_Right.setVisibility(View.INVISIBLE);
+                            b_Stop.setVisibility(View.INVISIBLE);
+                            b_Rvrse.setVisibility(View.INVISIBLE);
+                            b_Left.setVisibility(View.INVISIBLE);
+                            b_Ack.setVisibility(View.INVISIBLE);
+                            b_Lefter.setVisibility(View.INVISIBLE);
+                            b_Righter.setVisibility(View.INVISIBLE);
+                            b_Faster.setVisibility(View.INVISIBLE);
+                            b_Slower.setVisibility(View.INVISIBLE);
+                            b_StepClean.setVisibility(View.INVISIBLE);
+                            b_BigLeft.setVisibility(View.INVISIBLE);
+                            b_BigRight.setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -189,7 +203,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             }
         });
 
-        // Set initial UI state
+        // Handle stop button click
         b_Stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +238,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         b_Fwrd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = "3";
+                String message = "1";
                 byte[] value;
                 try {
                     //send data to service ... converts utf-8 to decimal
@@ -275,10 +289,34 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             }
         });
+        b_BigRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "17";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_BigRight, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
         b_Rvrse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = "1";
+                String message = "3";
                 byte[] value;
                 try {
                     //send data to service ... converts utf-8 to decimal
@@ -313,6 +351,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     //send data to service ... converts utf-8 to decimal
                     value = message.getBytes("UTF-8");
                     mService.writeRXCharacteristic(value);//KHE
+
+
                     //Update the log with time stamp
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                     listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
@@ -320,6 +360,32 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     edtMessage.setText("");
                     setButtonColors();
                     ViewCompat.setBackgroundTintList(b_Left, ContextCompat.getColorStateList(getApplicationContext()
+                            ,R.color.colorGo));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        b_BigLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "16";
+                byte[] value;
+                try {
+                    //send data to service ... converts utf-8 to decimal
+                    value = message.getBytes("UTF-8");
+                    mService.writeRXCharacteristic(value);//KHE
+
+
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    edtMessage.setText("");
+                    setButtonColors();
+                    ViewCompat.setBackgroundTintList(b_BigLeft, ContextCompat.getColorStateList(getApplicationContext()
                             ,R.color.colorGo));
                 } catch (UnsupportedEncodingException e) {
                     // TODO Auto-generated catch block
@@ -552,7 +618,18 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             }
         });
 
-    }
+        b_Ack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "ACK = 05 00 00 20 00 8d ef 02 d2";
+                    mService.writeRXCharacteristic(ACK_Value);//KHE
+                    //Update the log with time stamp
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: "+ message);
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+            }
+        });
+    } //End OnCreate
 
     private void setButtonColors(){
 
@@ -568,11 +645,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 ,R.color.colorAccent));
         ViewCompat.setBackgroundTintList(b_Right, ContextCompat.getColorStateList(getApplicationContext()
                 ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_BigRight, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
         ViewCompat.setBackgroundTintList(b_Rvrse, ContextCompat.getColorStateList(getApplicationContext()
                 ,R.color.colorAccent));
         ViewCompat.setBackgroundTintList(b_Stop, ContextCompat.getColorStateList(getApplicationContext()
                 ,R.color.colorAccent));
         ViewCompat.setBackgroundTintList(b_Left, ContextCompat.getColorStateList(getApplicationContext()
+                ,R.color.colorAccent));
+        ViewCompat.setBackgroundTintList(b_BigLeft, ContextCompat.getColorStateList(getApplicationContext()
                 ,R.color.colorAccent));
         ViewCompat.setBackgroundTintList(b_Lefter, ContextCompat.getColorStateList(getApplicationContext()
                 ,R.color.colorTrend));
@@ -608,9 +689,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private Handler mHandler = new Handler() {
         @Override
 
-        //Handler events that received from UART service
+        //Handler events that received from UART service - Haven't seen this get called KHE
         public void handleMessage(Message msg) {
-
+            Log.d(TAG, "KHE - Event received from UART service");
         }
     };
 
@@ -625,7 +706,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 runOnUiThread(new Runnable() {
                     public void run() {
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                        Log.d(TAG, "UART_CONNECT_MSG");
+                        Log.d(TAG, "KHE UART_CONNECT_MSG");
                         btnConnectDisconnect.setText("Disconnect");
                         edtMessage.setEnabled(true);
                         btnSend.setEnabled(true);
@@ -633,19 +714,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         listAdapter.add("["+currentDateTimeString+"] Connected to: "+ mDevice.getName());
                         messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
                         mState = UART_PROFILE_CONNECTED;
-                        b_Squeegee.setVisibility(View.VISIBLE);
-                        b_Scrubber.setVisibility(View.VISIBLE);
-                        b_Spray.setVisibility(View.VISIBLE);
-                        b_Fwrd.setVisibility(View.VISIBLE);
-                        b_Right.setVisibility(View.VISIBLE);
-                        b_Stop.setVisibility(View.VISIBLE);
-                        b_Rvrse.setVisibility(View.VISIBLE);
-                        b_Left.setVisibility(View.VISIBLE);
-                        b_StepClean.setVisibility(View.VISIBLE);
-                        b_Lefter.setVisibility(View.INVISIBLE);
-                        b_Righter.setVisibility(View.INVISIBLE);
-                        b_Faster.setVisibility(View.INVISIBLE);
-                        b_Slower.setVisibility(View.INVISIBLE);
                     }
                 });
             }
@@ -655,7 +723,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 runOnUiThread(new Runnable() {
                     public void run() {
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                        Log.d(TAG, "UART_DISCONNECT_MSG");
+                        Log.d(TAG, "KHE UART_DISCONNECT_MSG");
                         btnConnectDisconnect.setText("Connect");
                         edtMessage.setEnabled(false);
                         btnSend.setEnabled(false);
@@ -663,8 +731,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         listAdapter.add("["+currentDateTimeString+"] Disconnected to: "+ mDevice.getName());
                         mState = UART_PROFILE_DISCONNECTED;
                         mService.close();
-                        //setUiState();
-
+                        b_Squeegee.setVisibility(View.INVISIBLE);
+                        b_Scrubber.setVisibility(View.INVISIBLE);
+                        b_Spray.setVisibility(View.INVISIBLE);
+                        b_Fwrd.setVisibility(View.INVISIBLE);
+                        b_Right.setVisibility(View.INVISIBLE);
+                        b_Stop.setVisibility(View.INVISIBLE);
+                        b_Rvrse.setVisibility(View.INVISIBLE);
+                        b_Left.setVisibility(View.INVISIBLE);
+                        b_BigLeft.setVisibility(View.INVISIBLE);
+                        b_BigRight.setVisibility(View.INVISIBLE);
+                        b_Ack.setVisibility(View.INVISIBLE);
+                        b_Lefter.setVisibility(View.INVISIBLE);
+                        b_Righter.setVisibility(View.INVISIBLE);
+                        b_Faster.setVisibility(View.INVISIBLE);
+                        b_Slower.setVisibility(View.INVISIBLE);
+                        b_StepClean.setVisibility(View.INVISIBLE);
                     }
                 });
             }
@@ -672,36 +754,119 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                mService.enableTXNotification();
-                //KHE this action was triggered but obviously, nothing was done\
+
+                Log.d(TAG, "KHE - GATT SERVICES DISCOVERED");
+                String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                listAdapter.add("["+currentDateTimeString+"] TX: Setting TX NOTIFY");
+                messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                //######### ENABLE TX and ACK NOTIFICATION ############ after slight delay
+                setTxAckNotifications(100);
             }
             //*********************//
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
+                //BREAKPOINT NEXT LINE
+                String s_Message = "";
+                final byte[] rcvdValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
+                if(rcvdValue != null)
+                { //charachteristic = ACK = 013
+                    if(rcvdValue.length < 10 ) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                try {
+                                    if (rcvdValue.length > 1) { //Got some message other than from robot command echo
+                                        StringBuilder sb = new StringBuilder(rcvdValue.length * 2);
+                                        for (byte b : rcvdValue)
+                                            sb.append(String.format("%02x", b & 0xff));
+                                        String text = sb.toString();
+                                        Log.d(TAG, "KHE Data Value Rcvd" + text);
+                                        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                                        listAdapter.add("[" + currentDateTimeString + "] RX: " + text);
+                                        if( text .equals("656e71")) { //Hex for e=65 n=6e q=71
+                                            // Do something here if you want to respond to an Enq
+                                            mService.writeRXCharacteristic(ACK_Value);//KHE
+                                        }
+                                    } else { //Only one byte so command from robot
+                                        String text = new String(rcvdValue, StandardCharsets.UTF_8);
+                                        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                                        listAdapter.add("[" + currentDateTimeString + "] RX: " + text);
+                                    }
+                                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
 
-                final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            String text = new String(txValue, "UTF-8");
-                            String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                            listAdapter.add("["+currentDateTimeString+"] RX: "+text);
-                            messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-
-                        } catch (Exception e) {
-                            Log.e(TAG, e.toString());
-                        }
-                    }
-                });
-            }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.toString());
+                                }
+                            }
+                        });
+                    }//endif rcvdVale < 10
+                    if (rcvdValue.length > 9) { //Was receiving 10 Byte message at one point - not any more
+                        Log.d(TAG, "KHE => Got 10 byte txValue"); //Char = TX = 12
+                        mService.writeRXCharacteristic(ACK_Value);
+                    }//endif rcvdValue.length > 9
+                }//endif rcvdValue != null
+            }//endif action = data_available
             //*********************//
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)){
                 showMessage("Device doesn't support UART. Disconnecting");
                 mService.disconnect();
             }
-
-
         }
     };
+
+    private void setTxAckNotifications(final long l_MSecs){ //added delay after some loading problems
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mService.enableTXNotification())
+                {
+                    Log.d(TAG, "KHE - Tx Notification Set - Call AckNotification");
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX:  TX NOTIFY SET Calling ACK");
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    setAckNotification(1000);
+                }else
+                {
+                    setTxAckNotifications(l_MSecs + 100); //Try again
+                }
+            }
+        };
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, l_MSecs);
+    }
+
+    private void setAckNotification(final long l_MSecs){
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "KHE - Trying to set Ack Notification");
+                if (mService.enableAckNotification())
+                {
+                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                    listAdapter.add("["+currentDateTimeString+"] TX: Setting ACK NOTIFY");
+                    messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    Log.d(TAG, "KHE - Ack Notification Set");
+                    //tv_crctext.setText("Done with AckNotification");
+                    b_Squeegee.setVisibility(View.VISIBLE);
+                    b_Scrubber.setVisibility(View.VISIBLE);
+                    b_Spray.setVisibility(View.VISIBLE);
+                    b_Fwrd.setVisibility(View.VISIBLE);
+                    b_Right.setVisibility(View.VISIBLE);
+                    b_Stop.setVisibility(View.VISIBLE);
+                    b_Rvrse.setVisibility(View.VISIBLE);
+                    b_Left.setVisibility(View.VISIBLE);
+                    b_BigLeft.setVisibility(View.VISIBLE);
+                    b_BigRight.setVisibility(View.VISIBLE);
+                    b_Ack.setVisibility(View.VISIBLE);
+                    b_StepClean.setVisibility(View.VISIBLE);
+                    b_Lefter.setVisibility(View.INVISIBLE);
+                    b_Righter.setVisibility(View.INVISIBLE);
+                    b_Faster.setVisibility(View.INVISIBLE);
+                    b_Slower.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, l_MSecs);
+    }
 
     private void service_init() {
         Intent bindIntent = new Intent(this, UartService.class);
@@ -709,6 +874,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
     }
+
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);

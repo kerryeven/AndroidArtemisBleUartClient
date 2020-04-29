@@ -120,6 +120,26 @@
                         app:layout_constraintEnd_toStartOf="@+id/b_Stop" />
 
                     <Button
+                        android:id="@+id/b_BigLeft"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginEnd="32dp"
+                        android:text="Big Left"
+                        app:layout_constraintEnd_toEndOf="@+id/b_Left"
+                        app:layout_constraintTop_toTopOf="@+id/b_Rvrse" />
+
+                    <Button
+                        android:id="@+id/b_Ack"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="16dp"
+                        android:text="Snd Ack"
+                        app:layout_constraintBottom_toTopOf="@+id/b_Left"
+                        app:layout_constraintStart_toStartOf="@+id/b_Left" />
+
+                    <Button
                         android:id="@+id/b_Right"
                         android:layout_width="75dp"
                         android:layout_height="wrap_content"
@@ -127,6 +147,15 @@
                         android:text="Right"
                         app:layout_constraintBottom_toBottomOf="@+id/b_Stop"
                         app:layout_constraintStart_toEndOf="@+id/b_Stop" />
+
+                    <Button
+                        android:id="@+id/b_BigRight"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:text="Big Right"
+                        app:layout_constraintStart_toStartOf="@+id/b_Right"
+                        app:layout_constraintTop_toTopOf="@+id/b_Rvrse" />
 
                     <Button
                         android:id="@+id/b_Rvrse"
@@ -222,7 +251,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Rev 1.2"
+                        android:text="Rev 2.7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/btn_select" />
 
