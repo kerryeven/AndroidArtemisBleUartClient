@@ -1,5 +1,6 @@
 # AndroidArtemisBleUartClient
-download KERobotNrf.zip - unzip to Android Studio projects directory
+download KERobotNrf.zip - unzip to Android Studio projects directory or download and install app-debug.apk
+
 download Viper2_7.zip - unzip to Arduino Sketch directory
 # Android Phone client <<-messages->> Arduino server
 # Contains:
